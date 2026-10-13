@@ -1,0 +1,15 @@
+<div class="mt-4">
+
+  <div class="flex justify-between items-center mb-2">
+    <h4 class="font-semibold text-gray-700">{{ projectName() }}</h4>
+    <span class="text-sm text-gray-500">
+      {{ tasks().length }} tâche(s)
+    </span>
+  </div>
+
+  <app-task-list
+    [tasks]="tasks()"
+    [showAssignee]="false">
+  </app-task-list>
+
+</div>

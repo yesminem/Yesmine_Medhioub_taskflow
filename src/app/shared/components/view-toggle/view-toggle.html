@@ -1,0 +1,23 @@
+<div class="inline-flex rounded-lg border border-gray-200 bg-white p-1 shadow-sm">
+
+  <button
+    type="button"
+    (click)="select('tasks')"
+    class="px-4 py-2 text-sm font-medium rounded-md transition-colors"
+    [class]="view() === 'tasks'
+      ? 'bg-blue-600 text-white'
+      : 'text-gray-600 hover:bg-gray-100'">
+    Par tâche
+  </button>
+
+  <button
+    type="button"
+    (click)="select('users')"
+    class="px-4 py-2 text-sm font-medium rounded-md transition-colors"
+    [class]="view() === 'users'
+      ? 'bg-blue-600 text-white'
+      : 'text-gray-600 hover:bg-gray-100'">
+    Par user
+  </button>
+
+</div>

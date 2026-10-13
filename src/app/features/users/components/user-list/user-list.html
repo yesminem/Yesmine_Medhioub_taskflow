@@ -1,0 +1,19 @@
+<div class="space-y-4">
+
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    placeholder="Rechercher un utilisateur..."
+    class="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+
+  @if (filteredUsers().length === 0) {
+    <app-empty-state message="Aucun utilisateur trouvé." />
+  } @else {
+    <div class="grid gap-4 md:grid-cols-2">
+      @for (user of filteredUsers(); track user.id) {
+        <app-user-card [user]="user" [projects]="projects()" />
+      }
+    </div>
+  }
+
+</div>

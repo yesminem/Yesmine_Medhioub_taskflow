@@ -1,0 +1,60 @@
+<div class="bg-white shadow rounded-lg p-6">
+
+  <!-- Header: name, role, badge -->
+  <div class="flex justify-between items-start gap-3">
+    <div class="flex items-center gap-3">
+
+      <!-- Avatar rond -->
+      <div class="shrink-0 w-12 h-12 rounded-full bg-blue-600 text-white
+                  flex items-center justify-center font-bold">
+        {{ user().name | initials }}
+      </div>
+
+      <div>
+        <h3 class="text-xl font-semibold text-gray-800">{{ user().name | titlecase }}</h3>
+        <p class="text-sm text-gray-500">{{ user().email | lowercase }}</p>
+        <p class="text-sm text-gray-600 mt-1">{{ user().role }}</p>
+      </div>
+
+    </div>
+
+    @if (user().active) {
+      <span class="shrink-0 text-sm font-medium bg-green-100 text-green-700 px-2 py-1 rounded">
+        Actif
+      </span>
+    } @else {
+      <span class="shrink-0 text-sm font-medium bg-red-100 text-red-700 px-2 py-1 rounded">
+        Inactif
+      </span>
+    }
+  </div>
+
+  <!-- Counters -->
+  <div class="grid grid-cols-3 gap-3 mt-4 text-center">
+    <div class="bg-gray-50 rounded-lg p-2">
+      <p class="text-lg font-bold text-gray-700">{{ todoCount() }}</p>
+      <p class="text-xs text-gray-500">À faire</p>
+    </div>
+    <div class="bg-blue-50 rounded-lg p-2">
+      <p class="text-lg font-bold text-blue-700">{{ inProgressCount() }}</p>
+      <p class="text-xs text-blue-600">En cours</p>
+    </div>
+    <div class="bg-green-50 rounded-lg p-2">
+      <p class="text-lg font-bold text-green-700">{{ doneCount() }}</p>
+      <p class="text-xs text-green-600">Terminées</p>
+    </div>
+  </div>
+
+  <!-- Tasks grouped by project -->
+  @for (group of groups(); track group.projectId) {
+    <app-user-project-group
+      [projectName]="group.projectName"
+      [tasks]="group.tasks">
+    </app-user-project-group>
+  } @empty {
+  <div class="mt-4">
+    <app-empty-state message="Aucune tâche assignée" />
+  </div>
+}
+
+</div>
