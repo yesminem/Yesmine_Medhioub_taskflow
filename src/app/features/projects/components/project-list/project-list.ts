@@ -4,11 +4,12 @@ import { Project } from '../../models/project.model';
 import { PROJECTS } from '../../data/projects.data';
 import { ProjectCard } from '../project-card/project-card';
 import { ProjectService } from '../../../../core/services/project.service';
+import { AutoFocusDirective } from '../../../../shared/directives/auto-focus.directive';
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [FormsModule, ProjectCard],
+  imports: [FormsModule, ProjectCard, AutoFocusDirective],
   templateUrl: './project-list.html',
   styleUrl: './project-list.css'
 })

@@ -1,4 +1,4 @@
-<div
+<div appHighlight
   class="bg-white rounded-xl shadow-md p-5
          border border-gray-200
          hover:shadow-lg transition-shadow"
@@ -43,10 +43,27 @@
     <!-- 3. currency -->
     <p>Budget : {{ project().budget | currency:'TND':'symbol':'1.2-2' }}</p>
 
+    <p>Tâches en cours : {{ (project().tasks | filterStatus:'En cours').length }}</p>
+
+    @if (project().tasks.length === 0) {
+      <p>Aucune tâche pour le moment</p>
+    } @else if (completionRate === 1) {
+      <p>Projet terminé</p>
+    } @else if (completionRate > 0) {
+      <p>En progression</p>
+    } @else {
+      <p>Pas encore démarré</p>
+    }
+
     <!-- 4 et 5 : protégés contre la division par zéro -->
     @if (project().tasks.length > 0) {
       <p>Réalisation : {{ completionRate | percent:'1.0-0' }}</p>
       <p>Coût moyen par tâche : {{ averageCost | number:'1.0-0' }}</p>
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div class="h-2 rounded-full"
+            [ngStyle]="{ 'width.%': completionRate * 100, 'background-color': barColor }"></div>
+      </div>
+      
     }
 
     <!-- 7. keyvalue -->
