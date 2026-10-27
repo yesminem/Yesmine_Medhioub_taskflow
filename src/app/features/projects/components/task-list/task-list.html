@@ -1,64 +1,18 @@
 <div>
 
-  <h3 class="text-lg font-semibold text-gray-700 mb-3">
-    Tâches
-  </h3>
+  <h3 class="text-lg font-semibold text-gray-700 mb-3">Tâches</h3>
 
-  @if (tasks().length === 0) {
-
-    <p class="text-gray-500 italic bg-gray-50 rounded-lg p-4 text-center">
-      Aucune tâche.
-    </p>
-
-  } @else {
-
-    <div class="space-y-3">
-
-      @for (task of tasks(); track task.id) {
-        <div class="p-3 rounded-lg border border-gray-200 border-l-4"
-            [ngClass]="statusClasses[task.status]" 
-            appHighlight
-            appOverdue
-            [dueDate]="task.dueDate"
-            [done]="task.status === 'Terminé'">
-
-          <div class="flex justify-between items-center gap-3">
-            <span class="font-medium text-gray-800"
-                  [ngClass]="{ 'line-through': task.status === 'Terminé' }">{{ task.title }}</span>
-            <span class="shrink-0 text-sm font-medium bg-gray-200 text-gray-700 px-2 py-1 rounded">
-              @switch (task.priority) {
-                @case ('Haute') { ▲ Haute }
-                @case ('Moyenne') { ● Moyenne }
-                @default { ▼ Basse }
-              }
-            </span>
-          </div>
-
-          <p class="text-sm text-gray-500 mt-2">Statut : {{ task.status }}</p>
-
-          <p class="text-sm text-gray-500 mt-1">
-            @if (task.dueDate; as due) {
-              Échéance : {{ due | date:'dd/MM/yyyy' }}
-              @if (task.status !== 'Terminé') { · {{ due | deadline }} }
-            } @else {
-              Aucune échéance
-            }
-          </p>
-
-          @if (task.description) {
-            <p class="text-sm text-gray-600 mt-1"
-              [appTooltip]="task.description">
-              {{ task.description | truncate:40 }}
-            </p>
-          }
-          @if (showAssignee()) {
-            <p class="text-sm text-gray-500 mt-1">Assigné à : {{ assigneeName(task.assigneeId) }}</p>
-          }
-        </div>
-      }
-
-          </div>
-
-        }
+  <div class="space-y-3">
+    @for (task of tasks(); track task.id) {
+      <app-task-item
+        [task]="task"
+        [showAssignee]="showAssignee()"
+        [assigneeName]="assigneeName(task.assigneeId)" />
+    } @empty {
+      <p class="text-gray-500 italic bg-gray-50 rounded-lg p-4 text-center">
+        Aucune tâche
+      </p>
+    }
+  </div>
 
 </div>
