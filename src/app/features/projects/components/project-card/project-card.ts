@@ -4,7 +4,7 @@ import { Project } from '../../models/project.model';
 import { TaskList } from '../task-list/task-list';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 import { FilterStatusPipe } from '../../../../shared/pipes/filter-status.pipe';
-import { TaskStatusEvent } from '../../models/task.model';
+import { TaskStatusEvent, TaskStatus } from '../../models/task.model';
 
 @Component({
   selector: 'app-project-card',
@@ -24,6 +24,8 @@ projectSelected = output<Project>();
 taskStatusChange = output<TaskStatusEvent & { projectId: number}>(); 
 
 taskDelete = output<{ taskId: number, projectId: number }>();
+
+statusFilter = input<TaskStatus | ''>('');
 
 onTaskDelete(taskId: number): void {
   this.taskDelete.emit({ taskId, projectId: this.project().id });

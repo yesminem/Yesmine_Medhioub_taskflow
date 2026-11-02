@@ -5,12 +5,13 @@ import { PROJECTS } from '../../data/projects.data';
 import { ProjectCard } from '../project-card/project-card';
 import { ProjectService } from '../../../../core/services/project.service';
 import { AutoFocusDirective } from '../../../../shared/directives/auto-focus.directive';
-import { TaskStatusEvent } from '../../models/task.model';
+import { TaskStatusEvent, TaskStatus } from '../../models/task.model';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [FormsModule, ProjectCard, AutoFocusDirective],
+  imports: [FormsModule, ProjectCard, AutoFocusDirective, NgClass],
   templateUrl: './project-list.html',
   styleUrl: './project-list.css'
 })
@@ -21,6 +22,15 @@ export class ProjectList implements OnInit {
   searchTerm= signal('');
 
   selectedProjectId = signal<number | null>(null);
+
+  statusFilter = signal<TaskStatus | ''>('');
+
+  filters: { label: string; value: TaskStatus | '' }[] = [
+    { label: 'Toutes', value: '' },
+    { label: 'En cours', value: 'En cours' },
+    { label: 'Terminées', value: 'Terminé' },
+  ];
+  
 
   onProjectSelected(project: Project): void {
     this.selectedProjectId.set(project.id);

@@ -8,6 +8,20 @@
       TaskFlow
     </h1>
 
+    <!-- Filtres -->
+     <div class="flex gap-2 mb-6">
+        @for (f of filters; track f.label) {
+          <button type="button"
+                  (click)="statusFilter.set(f.value)"
+                  class="px-4 py-2 rounded-lg text-sm font-medium border"
+                  [ngClass]="statusFilter() === f.value
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300'">
+            {{ f.label }}
+          </button>
+        }
+      </div>
+
     <!-- Recherche -->
     <div class="mb-8">
       <input
@@ -30,6 +44,7 @@
           <app-project-card
             [project]="project"
             [selected]="project.id == selectedProjectId()"
+            [statusFilter]="statusFilter()"
             (projectSelected)="onProjectSelected($event)"
             (taskStatusChange)="onTaskStatusChange($event)"
             (taskDelete)="onTaskDelete($event)">
