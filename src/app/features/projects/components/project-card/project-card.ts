@@ -23,6 +23,12 @@ projectSelected = output<Project>();
 
 taskStatusChange = output<TaskStatusEvent & { projectId: number}>(); 
 
+taskDelete = output<{ taskId: number, projectId: number }>();
+
+onTaskDelete(taskId: number): void {
+  this.taskDelete.emit({ taskId, projectId: this.project().id });
+}
+
 selectProject(): void {
 this.projectSelected.emit(this.project());
 }

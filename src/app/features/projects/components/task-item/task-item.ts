@@ -24,6 +24,8 @@ export class TaskItem {
 
   taskStatusChange = output<TaskStatus>();
 
+  taskDelete = output<void>();
+
   readonly nextStatus: Record<TaskStatus, TaskStatus> = {
     'En attente': 'En cours',
     'En cours': 'Terminé',

@@ -85,7 +85,8 @@
   <!-- slice : seulement les 3 premières tâches -->
   <app-task-list
     [tasks]="project().tasks | slice:0:3"
-    (taskStatusChange)="onTaskStatusChange($event)">
+    (taskStatusChange)="onTaskStatusChange($event)"
+    (taskDelete)="onTaskDelete($event)">
   </app-task-list>
-
+  
 </div>

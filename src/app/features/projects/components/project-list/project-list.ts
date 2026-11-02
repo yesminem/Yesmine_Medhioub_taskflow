@@ -59,5 +59,19 @@ export class ProjectList implements OnInit {
             }
       )
     );
-}
+  }
+
+  onTaskDelete(event: { taskId: number; projectId: number }): void {
+    this.projects.update(projects =>
+      projects.map(project =>
+        project.id !== event.projectId
+          ? project // autre projet : inchangé
+          : {
+              ...project, // nouveau projet
+              tasks: project.tasks.filter(task => task.id !== event.taskId), // supprimer la tâche
+            }
+      )
+    );
+  }
+
 }

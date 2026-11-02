@@ -43,9 +43,14 @@
        [ngStyle]="{ 'width.%': progress[task().status], 'background-color': progressColors[task().status] }"></div>
 </div>
 
-<button type="button"
-        (click)="changeStatus()"
-        class="mt-2 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-  Passer à : {{ nextStatus[task().status] }}
-</button>
+<div class="flex gap-2 mt-2">
+  <button type="button" (click)="changeStatus()"
+          class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+    Passer à : {{ nextStatus[task().status] }}
+  </button>
+  <button type="button" (click)="taskDelete.emit()"
+          class="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+    Supprimer
+  </button>
+</div>
 </div>

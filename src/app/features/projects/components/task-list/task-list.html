@@ -8,7 +8,9 @@
         [task]="task"
         [showAssignee]="showAssignee()"
         [assigneeName]="assigneeName(task.assigneeId)"
-        (taskStatusChange) = "taskStatusChange.emit({taskId: task.id, status: $event})" />
+        (taskStatusChange) = "taskStatusChange.emit({taskId: task.id, status: $event})" 
+        (taskDelete) = "taskDelete.emit(task.id)"
+        />
     } @empty {
       <p class="text-gray-500 italic bg-gray-50 rounded-lg p-4 text-center">
         Aucune tâche

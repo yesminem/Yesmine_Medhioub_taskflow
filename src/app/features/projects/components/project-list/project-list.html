@@ -31,7 +31,8 @@
             [project]="project"
             [selected]="project.id == selectedProjectId()"
             (projectSelected)="onProjectSelected($event)"
-            (taskStatusChange)="onTaskStatusChange($event)">
+            (taskStatusChange)="onTaskStatusChange($event)"
+            (taskDelete)="onTaskDelete($event)">
           </app-project-card>
 
         }

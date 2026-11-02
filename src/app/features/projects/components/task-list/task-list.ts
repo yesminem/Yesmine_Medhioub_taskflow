@@ -18,6 +18,8 @@ export class TaskList {
 
   taskStatusChange = output<TaskStatusEvent>();
 
+  taskDelete = output<number>();
+
   private userService = inject(UserService);
   private users = signal<User[]>([]);
 
