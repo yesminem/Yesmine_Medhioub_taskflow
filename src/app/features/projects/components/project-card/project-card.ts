@@ -1,14 +1,15 @@
-import { Component, input, output } from '@angular/core';
-import { UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe, DecimalPipe, SlicePipe, KeyValuePipe, NgStyle } from '@angular/common';
+import { Component, input, output, computed } from '@angular/core';
+import { UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe, DecimalPipe, SlicePipe, KeyValuePipe, NgStyle, NgClass } from '@angular/common';
 import { Project } from '../../models/project.model';
 import { TaskList } from '../task-list/task-list';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 import { FilterStatusPipe } from '../../../../shared/pipes/filter-status.pipe';
+import { TaskStatusEvent } from '../../models/task.model';
 
 @Component({
   selector: 'app-project-card',
   standalone: true,
-  imports: [TaskList, UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe, DecimalPipe, SlicePipe, KeyValuePipe, NgStyle, HighlightDirective, FilterStatusPipe],
+  imports: [TaskList, UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe, DecimalPipe, SlicePipe, KeyValuePipe, NgStyle, HighlightDirective, FilterStatusPipe, NgClass],
   templateUrl: './project-card.html',
   styleUrl: './project-card.css'
 })
@@ -16,17 +17,28 @@ import { FilterStatusPipe } from '../../../../shared/pipes/filter-status.pipe';
 export class ProjectCard {
 
 project = input.required<Project>();
+selected = input<boolean>(false);
 
 projectSelected = output<Project>();
+
+taskStatusChange = output<TaskStatusEvent & { projectId: number}>(); 
 
 selectProject(): void {
 this.projectSelected.emit(this.project());
 }
 
-get completionRate(): number {
-    const tasks = this.project().tasks;
-    return tasks.filter(t=> t.status === 'Terminé').length / tasks.length;
+onTaskStatusChange(event: TaskStatusEvent): void {
+  this.taskStatusChange.emit({ ...event, projectId: this.project().id });
 }
+
+doneCount = computed(() =>
+  this.project().tasks.filter(t => t.status === 'Terminé').length
+);
+
+completionRate = computed(() => {
+  const total = this.project().tasks.length;
+  return total === 0 ? 0 : this.doneCount() / total;
+});
 
 get averageCost(): number {
     return this.project().budget / this.project().tasks.length;
@@ -41,7 +53,7 @@ get tasksByPriority(): Record<string, number> {
 }
 
 get barColor(): string {
-  const rate = this.completionRate * 100;
+  const rate = this.completionRate() * 100;
   if (rate < 34) return '#ef4444';
   if (rate <= 66) return '#f59e0b';
   return '#22c55e';

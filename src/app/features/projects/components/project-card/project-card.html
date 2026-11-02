@@ -1,18 +1,16 @@
 <div appHighlight
+  [ngClass]="{ 'ring-2 ring-blue-500': selected() }"
   class="bg-white rounded-xl shadow-md p-5
          border border-gray-200
-         hover:shadow-lg transition-shadow"
->
+         hover:shadow-lg transition-shadow">
 
   <!-- En-tête -->
   <div class="flex justify-between items-start gap-4 mb-3">
 
-    <!-- 1. uppercase -->
     <h2 class="text-xl font-bold text-gray-800">
       {{ project().name | uppercase }}
     </h2>
 
-    <!-- Statut (inchangé) -->
     @if (project().status === 'En attente') {
       <span class="shrink-0 px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
         {{ project().status }}
@@ -34,39 +32,38 @@
     {{ project().description }}
   </p>
 
-  <!-- NOUVEAU : infos du projet -->
+  <!-- Infos du projet -->
   <div class="text-sm text-gray-700 mb-4 space-y-1">
 
-    <!-- 2. date -->
     <p>Début : {{ project().startDate | date:'dd MMMM yyyy' }}</p>
 
-    <!-- 3. currency -->
     <p>Budget : {{ project().budget | currency:'TND':'symbol':'1.2-2' }}</p>
 
     <p>Tâches en cours : {{ (project().tasks | filterStatus:'En cours').length }}</p>
 
+    <!-- Message d'avancement -->
     @if (project().tasks.length === 0) {
       <p>Aucune tâche pour le moment</p>
-    } @else if (completionRate === 1) {
+    } @else if (completionRate() === 1) {
       <p>Projet terminé</p>
-    } @else if (completionRate > 0) {
+    } @else if (completionRate() > 0) {
       <p>En progression</p>
     } @else {
       <p>Pas encore démarré</p>
     }
 
-    <!-- 4 et 5 : protégés contre la division par zéro -->
+    <!-- Protégé contre la division par zéro -->
     @if (project().tasks.length > 0) {
-      <p>Réalisation : {{ completionRate | percent:'1.0-0' }}</p>
+      <p>Réalisation : {{ completionRate() | percent:'1.0-0' }}</p>
+      <p>Tâches terminées : {{ doneCount() }} / {{ project().tasks.length }}</p>
       <p>Coût moyen par tâche : {{ averageCost | number:'1.0-0' }}</p>
       <div class="w-full bg-gray-200 rounded-full h-2">
         <div class="h-2 rounded-full"
-            [ngStyle]="{ 'width.%': completionRate * 100, 'background-color': barColor }"></div>
+             [ngStyle]="{ 'width.%': completionRate() * 100, 'background-color': barColor }"></div>
       </div>
-      
     }
 
-    <!-- 7. keyvalue -->
+    <!-- keyvalue -->
     <div class="flex gap-2 flex-wrap">
       @for (p of tasksByPriority | keyvalue; track p.key) {
         <span class="px-2 py-0.5 rounded bg-gray-100">{{ p.key }} : {{ p.value }}</span>
@@ -85,9 +82,10 @@
     Sélectionner
   </button>
 
-  <!-- 6. slice : seulement les 3 premières tâches -->
+  <!-- slice : seulement les 3 premières tâches -->
   <app-task-list
-    [tasks]="project().tasks | slice:0:3">
+    [tasks]="project().tasks | slice:0:3"
+    (taskStatusChange)="onTaskStatusChange($event)">
   </app-task-list>
 
 </div>

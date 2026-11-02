@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { User } from '../../features/users/models/user.model';
 import { USERS } from '../../features/users/data/users.data';
+import { map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -9,7 +10,7 @@ export class UserService {
     return of(USERS);
   }
 
-  getUserById(id: number): Observable<User | undefined> {
-    return of(USERS.find(user => user.id === id));
+  getUserById(id: number) {
+    return this.getUsers().pipe(map(users => users.find(u => u.id === id)));
   }
 }

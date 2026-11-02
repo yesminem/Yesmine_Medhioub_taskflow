@@ -29,7 +29,9 @@
 
           <app-project-card
             [project]="project"
-            (projectSelected)="onProjectSelected($event)">
+            [selected]="project.id == selectedProjectId()"
+            (projectSelected)="onProjectSelected($event)"
+            (taskStatusChange)="onTaskStatusChange($event)">
           </app-project-card>
 
         }

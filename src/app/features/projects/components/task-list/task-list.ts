@@ -1,8 +1,9 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal, output } from '@angular/core';
 import { Task } from '../../models/task.model';
 import { User } from '../../../users/models/user.model';
 import { UserService } from '../../../../core/services/user.service';
 import { TaskItem } from '../task-item/task-item';
+import { TaskStatus, TaskStatusEvent } from '../../models/task.model';
 
 @Component({
   selector: 'app-task-list',
@@ -14,6 +15,8 @@ import { TaskItem } from '../task-item/task-item';
 export class TaskList {
   tasks = input.required<Task[]>();
   showAssignee = input<boolean>(true);
+
+  taskStatusChange = output<TaskStatusEvent>();
 
   private userService = inject(UserService);
   private users = signal<User[]>([]);

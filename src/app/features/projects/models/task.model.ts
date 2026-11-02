@@ -2,6 +2,11 @@ export type TaskPriority = 'Haute' | 'Moyenne' | 'Basse';
 
 export type TaskStatus = 'En attente' | 'En cours' | 'Terminé';
 
+export interface TaskStatusEvent {
+  taskId: number;
+  status: TaskStatus;
+}
+
 export interface Task {
 id: number;
 title: string;

@@ -37,4 +37,15 @@
 @if (showAssignee()) {
   <p class="text-sm text-gray-500 mt-1">Assigné à : {{ assigneeName() }}</p>
 }
+
+<div class="w-full bg-gray-200 rounded-full h-1 mt-2">
+  <div class="h-1 rounded-full"
+       [ngStyle]="{ 'width.%': progress[task().status], 'background-color': progressColors[task().status] }"></div>
+</div>
+
+<button type="button"
+        (click)="changeStatus()"
+        class="mt-2 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+  Passer à : {{ nextStatus[task().status] }}
+</button>
 </div>
