@@ -1,7 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../models/user.model';
-import { Project } from '../../../projects/models/project.model';
 import { UserService } from '../../../../core/services/user.service';
 import { ProjectService } from '../../../../core/services/project.service';
 import { UserCard } from '../user-card/user-card';
@@ -19,7 +18,7 @@ export class UserList implements OnInit {
   private projectService = inject(ProjectService);
 
   users = signal<User[]>([]);
-  projects = signal<Project[]>([]);
+  projects = this.projectService.projects;   // même signal que ProjectList
   searchTerm = signal('');
 
   filteredUsers = computed(() => {
@@ -29,6 +28,5 @@ export class UserList implements OnInit {
 
   ngOnInit(): void {
     this.userService.getUsers().subscribe(users => this.users.set(users));
-    this.projectService.getProjects().subscribe(projects => this.projects.set(projects));
   }
 }

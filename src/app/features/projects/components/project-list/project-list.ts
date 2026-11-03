@@ -1,12 +1,11 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
 import { Project } from '../../models/project.model';
-import { PROJECTS } from '../../data/projects.data';
+import { TaskStatusEvent, TaskStatus } from '../../models/task.model';
 import { ProjectCard } from '../project-card/project-card';
 import { ProjectService } from '../../../../core/services/project.service';
 import { AutoFocusDirective } from '../../../../shared/directives/auto-focus.directive';
-import { TaskStatusEvent, TaskStatus } from '../../models/task.model';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-project-list',
@@ -15,14 +14,15 @@ import { NgClass } from '@angular/common';
   templateUrl: './project-list.html',
   styleUrl: './project-list.css'
 })
-export class ProjectList implements OnInit {
- 
-  projects = signal<Project[]>([]);
+export class ProjectList {
 
-  searchTerm= signal('');
+  private projectService = inject(ProjectService);
 
+  // Le signal vit dans le service : on le lit seulement
+  projects = this.projectService.projects;
+
+  searchTerm = signal('');
   selectedProjectId = signal<number | null>(null);
-
   statusFilter = signal<TaskStatus | ''>('');
 
   filters: { label: string; value: TaskStatus | '' }[] = [
@@ -30,58 +30,28 @@ export class ProjectList implements OnInit {
     { label: 'En cours', value: 'En cours' },
     { label: 'Terminées', value: 'Terminé' },
   ];
-  
-
-  onProjectSelected(project: Project): void {
-    this.selectedProjectId.set(project.id);
-  }
 
   filteredProjects = computed(() => {
     const term = this.searchTerm().toLowerCase();
     return this.projects().filter(project => project.name.toLowerCase().includes(term));
   });
 
-  constructor(private projectService: ProjectService) {}
-  
-  ngOnInit(): void {
-    this.projectService.getProjects().subscribe(projects => {
-      console.log('projects received:', projects);
-      this.projects.set(projects);
-    });
-  }
+  loading = this.projectService.loading;
+  error = this.projectService.error;
 
-  selectProject(project: Project): void {
-    console.log('Projet sélectionné :', project);
+  onProjectSelected(project: Project): void {
+    this.selectedProjectId.set(project.id);
   }
 
   onTaskStatusChange(event: TaskStatusEvent & { projectId: number }): void {
-    this.projects.update(projects =>
-      projects.map(project =>
-        project.id !== event.projectId
-          ? project                                   // autre projet : inchangé
-          : {
-              ...project,                             // nouveau projet
-              tasks: project.tasks.map(task =>
-                task.id === event.taskId
-                  ? { ...task, status: event.status } // nouvelle tâche
-                  : task                              // autres tâches : inchangées
-              ),
-            }
-      )
-    );
+    this.projectService.updateTaskStatus(event.projectId, event.taskId, event.status);
   }
 
   onTaskDelete(event: { taskId: number; projectId: number }): void {
-    this.projects.update(projects =>
-      projects.map(project =>
-        project.id !== event.projectId
-          ? project // autre projet : inchangé
-          : {
-              ...project, // nouveau projet
-              tasks: project.tasks.filter(task => task.id !== event.taskId), // supprimer la tâche
-            }
-      )
-    );
+    this.projectService.deleteTask(event.projectId, event.taskId);
   }
 
+  onDeleteProject(id: number): void {
+    this.projectService.deleteProject(id);
+  }
 }

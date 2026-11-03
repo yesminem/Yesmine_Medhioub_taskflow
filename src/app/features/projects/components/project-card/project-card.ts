@@ -1,10 +1,11 @@
-import { Component, input, output, computed } from '@angular/core';
+import { Component, input, output, computed, inject } from '@angular/core';
 import { UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe, DecimalPipe, SlicePipe, KeyValuePipe, NgStyle, NgClass } from '@angular/common';
 import { Project } from '../../models/project.model';
 import { TaskList } from '../task-list/task-list';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 import { FilterStatusPipe } from '../../../../shared/pipes/filter-status.pipe';
 import { TaskStatusEvent, TaskStatus } from '../../models/task.model';
+import { FavoritesService } from '../../../../core/services/favorites.service';
 
 @Component({
   selector: 'app-project-card',
@@ -26,6 +27,8 @@ taskStatusChange = output<TaskStatusEvent & { projectId: number}>();
 taskDelete = output<{ taskId: number, projectId: number }>();
 
 statusFilter = input<TaskStatus | ''>('');
+
+readonly favorites = inject(FavoritesService);
 
 onTaskDelete(taskId: number): void {
   this.taskDelete.emit({ taskId, projectId: this.project().id });
